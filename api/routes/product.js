@@ -11,9 +11,13 @@ router.get('/', (req, res, next) => {
 
 });
 router.post('/', (req, res, next) => {
-
+    const product = {
+        id: req.body.id,
+        name: req.body.name
+    }
     res.status(200).json({
-        iam: "post request"
+        iam: "post request",
+        product: product
     });
 
 
@@ -39,7 +43,7 @@ router.delete('/:id', (req, res, next) => {
 
     res.status(200).json({
         iam: "delete request with  $id !"
-    }); 
+    });
 
 });
 
