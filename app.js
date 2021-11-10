@@ -3,7 +3,7 @@ const app = express()
 
 app.use((req, res, next) => {
 
-    req.statusCode(200).json({
+    res.status(200).json({
         "message": "hello world",
     });
 });
