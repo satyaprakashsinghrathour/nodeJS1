@@ -7,9 +7,22 @@ const router = express.Router()
 
 router.get('/', (req, res, next) => {
 
-    res.status(200).json({
-        iam: "get request"
-    });
+
+
+    Product.find().exec().then(doc => {
+        if (doc.length > 0) {
+            res.status(200).json(
+                doc
+            )
+        } else {
+            res.status(200).json({
+                message: "No entries found"
+            })
+        }
+
+    }).catch(e => res.status(200).json({
+        error: e,
+    }));
 
 
 });
@@ -37,16 +50,21 @@ router.post('/', (req, res, next) => {
 router.get('/:id', (req, res, next) => {
 
 
-    // res.status(200).json({
-    //     iam: "get request with  $id !"
-    // });
     const id = req.params.id;
     Product.findById(id).exec().then(result => {
         console.log(result);
-        res.status(200).json({
-            message: "Handling post request",
-            result: result
-        });
+        if (result) {
+            res.status(200).json({
+                message: "Handling post request",
+                result: result
+            });
+        } else {
+            res.status(200).json({
+                message: "invalid id",
+                // result: result
+            });
+
+        }
     }).catch(e => {
         console.log(e);
         res.status(500).json({
@@ -58,18 +76,36 @@ router.get('/:id', (req, res, next) => {
 });
 router.patch('/:id', (req, res, next) => {
 
-    res.status(200).json({
-        iam: "PATCH request with  $id !"
-    });
+    const id = req.params.id;
+    const updateOps = {};
+    for (const ops of req.body) {
+        updateOps[ops.propName] = ops.value;
+    }
+    Product.updateMany({
+        _id: id
+    }, {
+        $set: updateOps
+    }).exec().then(doc => res.status(200).json(doc)).catch(e => {
+        console.log(e);
+        res.status(500).json({
+            error: e
+        });
+    });;
 
 
 });
 
 router.delete('/:id', (req, res, next) => {
+    const id = req.params.id;
 
-    res.status(200).json({
-        iam: "delete request with  $id !"
-    });
+
+    Product.remove({
+        _id: id
+    }).then(doc => console.log(doc)).catch(e => res.status(400).json({
+        error: e
+    }));
+
+
 
 });
 
