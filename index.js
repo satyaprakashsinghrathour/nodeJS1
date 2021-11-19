@@ -6,6 +6,7 @@ const app = express()
 //  const router = require("./app")
 const productRouter = require("./api/routes/product")
 const orderRouter = require("./api/routes/order")
+const userRouter = require("./api/routes/user")
 const port = process.env.PORT || 3000
 app.use(morgan("dev"));
 app.use(express.urlencoded({
@@ -31,6 +32,7 @@ connect.once("open", function () {
 app.use(express.json());
 app.use('/product', productRouter);
 app.use('/order', orderRouter);
+app.use('/user', userRouter);
 
 
 app.use((req, res, next) => {
